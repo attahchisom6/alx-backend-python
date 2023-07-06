@@ -12,4 +12,4 @@ def sum_list(A: list[float]) -> float:
     sum: float = 0
     for num in A:
         sum += num
-    return sum
+    return float(sum)
