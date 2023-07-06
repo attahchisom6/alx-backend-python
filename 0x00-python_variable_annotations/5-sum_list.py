@@ -2,9 +2,10 @@
 """
 annotating a function returning list
 """
+from typing import List
 
 
-def sum_list(input_list: list[float]) -> float:
+def sum_list(input_list: List[float]) -> float:
     """
     this function will all entries in the given list A
     and return the sum as a float
