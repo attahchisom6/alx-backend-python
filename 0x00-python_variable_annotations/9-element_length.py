@@ -6,7 +6,6 @@ from typing import List, Tuple, Sequence, Iterable, Iterable
 
 
 def element_length(lst: Iterable[Sequence]) -> List[Tuple[Sequence, int]]:
-    ""
     """
     annotating for sequence of iterables
     """
