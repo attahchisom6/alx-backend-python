@@ -2,10 +2,11 @@
 """
 Adding type Annotations based only on given parameters and return value
 """
-from typing import Mapping, Union, Any
+from typing import Mapping, Union, Any, TypeVar
+T = TypeVar('T')
 
 
-def safely_get_value(dct: Mapping, key: Any, default: Union[Any, None] = None) -> Union[Any, None]:
+def safely_get_value(dct: Mapping, key: Any, default: Union[T, None] = None) -> Union[Any, T]:
     """
     Annontating value returned by dictionary
     """
