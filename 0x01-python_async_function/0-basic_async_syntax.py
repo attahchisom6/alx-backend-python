@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Creating asynx function ro wait for a max time b4 returning
 """
