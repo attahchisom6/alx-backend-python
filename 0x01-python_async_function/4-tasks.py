@@ -5,10 +5,10 @@ is being called
 """
 import asyncio
 from typing import List
-task_wait_random = __import__('3-tasks').task_wait_random
+task_wait_random = __import__('3-tasks').wait_random
 
 
-async def task_wait_n(n: int, max_delay: int = 10) -> List[float]:
+async def task_wait_n(n: int, max_delay: int) -> List[float]:
     """
     altering wait_n function
     """
@@ -19,7 +19,7 @@ async def task_wait_n(n: int, max_delay: int = 10) -> List[float]:
         task = task_wait_random(max_delay)
         done_spawned.append(task)
 
-    for task in asyncio.as_completed(done_spawned):
-        completed = await task
+    for spawned in asyncio.as_completed(done_spawned):
+        completed = await spawned
         delay_list.append(completed)
     return delay_list
