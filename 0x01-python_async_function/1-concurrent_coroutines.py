@@ -21,7 +21,7 @@ async def wait_n(n: int, max_delay: int) -> List[float]:
 
     # Here we will get the values as they are completed, so as to get
     # an ordered list in ascending order
-    for spawned in asyncio.as_completed(done_spawn):
+    for spawned in asyncio.as_completed(done_spawned):
         completed = await spawned
         delay_list.append(completed)
     return delay_list
