@@ -13,7 +13,6 @@ class TestAccessNestedMap(unittest.TestCase):
         ({"a": {"b": 2}}, ("a"), {"b": 2}),
         ({"a": {"b": 2}}, ("a", "b",), 2)
         ])
-
     def test_access_nested_map(self, nested_map, path, expected_result):
         """
         test the access_nested map function
@@ -25,7 +24,6 @@ class TestAccessNestedMap(unittest.TestCase):
         ({}, ("a",), KeyError('a')),
         ({"a": 1}, ("a", "b",), KeyError('b'))
     ])
-
     def test_access_nested_map(self, nested_map, path, expected_output):
         """
         test key error, then raise exceptions wen seen
