@@ -33,6 +33,7 @@ class TestAccessNestedMap(unittest.TestCase):
             access_nested_map(nested_map, path)
         self.assertEqual(str(e.exception), str(expected_output))
 
+
 class TestGetJson(unittest.TestCase):
     """
     This will test the get_json function from utils
@@ -42,9 +43,9 @@ class TestGetJson(unittest.TestCase):
         ("http://example.com", {"payload": True}),
         ("http://holberton.io", {"payload": False})
     ])
-    def test_get_json(self, url: str, payload: dict) -> bool:
+    def test_get_json(self, url: str, test_payload: dict) -> bool:
         with patch('utils.requests.get') as mock_get:
             mock_response = mock_get.return_value
-            mock_in_json = mock_response.json()
-            mock_in_json.returned_value = payload
-            self.assertEqual(get_json(url), payload)
+            mock_in_json = mock_response.json
+            mock_in_json.return_value = test_payload
+            self.assertEqual(get_json(url), mock_in_json.return_value)
