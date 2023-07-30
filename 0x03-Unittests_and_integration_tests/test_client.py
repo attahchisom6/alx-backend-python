@@ -6,7 +6,7 @@ are tested for a proper output here
 import unittest
 from parameterized import parameterized
 from unittest.mock import patch
-from client import GithubOrgClient as git_org
+from client import GithubOrgClient as github_org
 from utils import get_json
 
 
@@ -19,15 +19,20 @@ class TestGithubOrgClient(unittest.TestCase):
         ("google"),
         ("abc")
     ])
+    # we proceed to mock get_json from client module so that no actual
+    # http request is made
     @patch("client.get_json")
     def test_org(self, org_name, mock_get_json):
         """
         this will test if an api endpoint correctly
         returns the expected value
         """
-        payload = {"payload": True}
-        mock_get_json.return_value = payload
-        client = git_org(org_name)
-        actual_output = client.org
-        self.assertEqual(actual_output, payload)
-        mock_get_json.assert_called_once()
+        expected_url = "https://api.github.com/orgs/{}".format(org_name)
+        mock_get_json.return_value = {"name": org_name}
+
+        # client module has bn mocked to prevent http request
+        github_client = github_org(org_name)
+        mocked_output = github_client.org
+
+        mock_get_json.assert_called_once_with(expected_url)
+        self.assertEqual(mocked_output.get("name"), org_name)
