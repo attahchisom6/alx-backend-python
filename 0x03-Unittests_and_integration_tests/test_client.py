@@ -30,7 +30,7 @@ class TestGithubOrgClient(unittest.TestCase):
         expected_url = "https://api.github.com/orgs/{}".format(org_name)
         mock_get_json.return_value = {"name": org_name}
 
-        # client module has bn mocked to prevent http request
+        # client module has bn mocked to prevent actual http request
         github_client = github_org(org_name)
         mocked_output = github_client.org
 
