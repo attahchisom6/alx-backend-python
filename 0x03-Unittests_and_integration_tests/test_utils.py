@@ -60,7 +60,7 @@ class TestMemoize(unittest.TestCase):
         """
         test the memoize function
         """
-        class TestClass():
+        class TestClass:
             """
             q class
             """
