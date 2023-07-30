@@ -47,6 +47,6 @@ class TestGithubOrgClient(unittest.TestCase):
             mock_org.return_value = {"repos_url": "abc"}
             mocked_output = mock_org.return_value
 
-            actual_output = github_org("abc")
-            actual_output = actual_output._public_repos_url
+            github_client = github_org("abc")
+            actual_output = github_client._public_repos_url
             self.assertEqual(actual_output, mocked_output.get("repos_url"))
