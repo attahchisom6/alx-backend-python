@@ -61,17 +61,11 @@ class TestMemoize(unittest.TestCase):
         test the memoize function
         """
         class TestClass:
-            """
-            q class
-            """
             def a_method(self):
                 return 42
 
             @memoize
             def a_property(self):
-                """
-                calls a method
-                """
                 return self.a_method()
 
         # test_obj = TestClass()
