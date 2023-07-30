@@ -5,7 +5,7 @@ are tested for a proper output here
 """
 import unittest
 from parameterized import parameterized
-from unittest.mock import patch
+from unittest.mock import patch, PropertyMock
 from client import GithubOrgClient as github_org
 from utils import get_json
 
@@ -37,19 +37,16 @@ class TestGithubOrgClient(unittest.TestCase):
         mock_get_json.assert_called_once_with(expected_url)
         self.assertEqual(mocked_output.get("name"), org_name)
 
-    # patch the org method of the class GithubOrgClient
-    @patch("test_client.GithubOrgClient.org")
-    def test_public_repos_url(self, mock_org):
+    def test_public_repos_url(self):
         """
         test the output of the _public_repo _url method
         """
-        mocked_payload = mock_org.object(
-            GithubOrgClient,
-            "org",
-            new_callable=Property_Mock
-        )
-        mock_org.return_value = {"repos_url": mock_payload}
-        mock_output = mock_payload._public_repos_url
+        # note: github_org is an alias for GitOrgClient
+        with patch.object(
+                github_org, "org", new_callable=PropertyMock) as mock_org:
+            mock_org.return_value = {"repos_url": "abc"}
+            mocked_output = mock_org.return_value
 
-        actual_payload = github_url(mock_org)
-        self
+            actual_output = github_org("abc")
+            actual_output = actual_output._public_repos_url
+            self.assertEqual(actual_output, mocked_output.get("repos_url"))
