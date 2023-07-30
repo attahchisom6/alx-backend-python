@@ -6,7 +6,7 @@ are tested for a proper output here
 import unittest
 from parameterized import parameterized
 from unittest.mock import patch
-import GithubOrgClient as git_org
+from client import GithubOrgClient as git_org
 from utils import get_json
 
 
@@ -16,17 +16,18 @@ class TestGithubOrgClient(unittest.TestCase):
     is correctly defined by the GithubOrgClient class
     """
     @parameterized.expand([
-        (google),
-        (abc)
+        ("google"),
+        ("abc")
     ])
-    @patch("test_client.get_json")
-    def test_org(org_name, mock_get_json):
+    @patch("client.get_json")
+    def test_org(self, org_name, mock_get_json):
         """
         this will test if an api endpoint correctly
         returns the expected value
         """
-        payload = {"payload": true}
+        payload = {"payload": True}
         mock_get_json.return_value = payload
-        actual_output = git_org("org_name")
+        client = git_org(org_name)
+        actual_output = client.org
         self.assertEqual(actual_output, payload)
         mock_get_json.assert_called_once()
