@@ -43,12 +43,10 @@ class TestGetJson(unittest.TestCase):
         ("http://example.com", {"payload": True}),
         ("http://holberton.io", {"payload": False})
     ])
-    def test_get_json(self, url: str, test_payload: dict) -> bool:
+    def test_get_json(self, url, test_payload):
         with patch('requests.get') as mock_get:
-            mock_response = mock_get.return_value
-            mock_in_json = mock_response.json
-            mock_in_json.return_value = test_payload
-            self.assertEqual(get_json(url), test_payload)
+            mock_get.return_value.json.return_value = test_payload
+            self.assertEqual(get_json(url),  test_payload)
 
 
 class TestMemoize(unittest.TestCase):
