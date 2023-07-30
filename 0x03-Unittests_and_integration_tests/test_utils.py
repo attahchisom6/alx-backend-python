@@ -41,11 +41,11 @@ class TestGetJson(unittest.TestCase):
     """
     @parameterized.expand([
         ("http://example.com", {"payload": True}),
-        ("http://holberton.io", {"payload": False})
+        ("http://holberton.io", {"payload": False}),
     ])
-    def test_get_json(self, url, test_payload):
-        with patch('requests.get') as mock_get:
-            mock_get.return_value.json.return_value = test_payload
+    @patch("test_utils.get_json")
+    def test_get_json(self, url, test_payload, mock_get):
+            mock_get.return_value = test_payload
             self.assertEqual(get_json(url),  test_payload)
 
 
