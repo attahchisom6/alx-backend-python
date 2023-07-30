@@ -74,7 +74,6 @@ class TestMemoize(unittest.TestCase):
                 """
                 return self.a_method()
 
-        # test_obj = TestClass()
         with patch.object(TestClass, "a_method") as mock_method:
             test_obj = TestClass()
             test_obj.a_property()
