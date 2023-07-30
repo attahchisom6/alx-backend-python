@@ -31,8 +31,8 @@ class TestGithubOrgClient(unittest.TestCase):
         mock_get_json.return_value = {"name": org_name}
 
         # client module has bn mocked to prevent actual http request
-        github_client = github_org(org_name)
-        mocked_output = github_client.org
+        mocked_client = github_org(org_name)
+        mocked_output = mocked_client.org
 
         mock_get_json.assert_called_once_with(expected_url)
         self.assertEqual(mocked_output.get("name"), org_name)
