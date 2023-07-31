@@ -4,10 +4,11 @@ s module to test side,  all the functions from clients
 are tested for a proper output here
 """
 import unittest
-from parameterized import parameterized
+from parameterized import parameterized, parameterized_class
 from unittest.mock import patch, PropertyMock
 from client import GithubOrgClient as github_org
 from utils import get_json
+from fixtures import TEST_PAYLOAD
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -89,3 +90,46 @@ class TestGithubOrgClient(unittest.TestCase):
         actual_output = github_org.has_license(repo, key)
 
         self.assertEqual(actual_output, expected_output)
+
+
+@parameterized_class(
+    ("org_payload", "repos_payload", "expected_repos", "apache2_repos"),
+    TEST_PAYLOAD
+)
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """
+    an integration test to check external http requests by
+    mocking the requesting parameters(codes)
+    """
+    @classmethod
+    def setUpClass(cls):
+        """
+        sets up or define objects in the integration test class
+        """
+        kwargs = {"return_value.json.side_effect":
+                  [
+                      cls.org_payload, cls.repos_payload,
+                      cls.org_payload, cls.repos_payload
+                      ]
+                  }
+        cls.get_patcher = patch("requests.get", **kwargs)
+        cls.mock_get_json = cls.get_patcher.start()
+
+    @classmethod
+    def tearDownClass(cls):
+        """
+        reset the test parameters and objects wen we are through with it
+        """
+        cls.get_patcher.stop()
+
+    def test_public_repo_integration(self):
+        """
+        an integration test to test the public repo module
+        """
+        mocked_client = github_org("gameWorld.com")
+        mocked_output = mocked_client.public_repos()
+
+        self.assertEqual(mocked_output, self.expected_repos)
+        self.assertEqual(mocked_client.repos_payload, self.repos_payload)
+        self.assertEqual(mocked_client.org, self.org_payload)
+        self.assertEqual(mocked_client.public_repos("wrong_license"), [])
