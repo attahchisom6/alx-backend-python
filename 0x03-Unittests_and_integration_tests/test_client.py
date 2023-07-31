@@ -143,4 +143,5 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
         self.assertEqual(mocked_output(), self.expected_repos)
         self.assertEqual(mocked_output("apache-2.0"), self.apache2_repos)
+        self.assertEqual(mocked_output("wrong-licence"), [])
         self.mock_get_json.assert_called()
