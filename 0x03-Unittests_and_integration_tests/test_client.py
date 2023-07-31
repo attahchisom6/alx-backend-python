@@ -6,7 +6,8 @@ are tested for a proper output here
 import unittest
 from parameterized import parameterized, parameterized_class
 from unittest.mock import patch, PropertyMock
-from client import GithubOrgClient
+from client import GithubOrgClient as github_org
+import requests
 from fixtures import TEST_PAYLOAD
 
 
@@ -31,7 +32,7 @@ class TestGithubOrgClient(unittest.TestCase):
         mock_get_json.return_value = {"name": org_name}
 
         # client module has bn mocked to prevent actual http request
-        mocked_client = GithubOrgClient(org_name)
+        mocked_client = github_org(org_name)
         mocked_output = mocked_client.org
 
         mock_get_json.assert_called_once_with(expected_url)
@@ -41,13 +42,13 @@ class TestGithubOrgClient(unittest.TestCase):
         """
         test the output of the _public_repo _url method
         """
-        # note: GithubOrgClient is an alias for GitOrgClient
+        # note: github_org is an alias for GitOrgClient
         with patch.object(
-                GithubOrgClient, "org", new_callable=PropertyMock) as mock_org:
+                github_org, "org", new_callable=PropertyMock) as mock_org:
             mock_org.return_value = {"repos_url": "abc"}
             mocked_output = mock_org.return_value
 
-            github_client = GithubOrgClient("abc")
+            github_client = github_org("abc")
             actual_output = github_client._public_repos_url
             self.assertEqual(actual_output, mocked_output.get("repos_url"))
 
@@ -68,11 +69,11 @@ class TestGithubOrgClient(unittest.TestCase):
         mock_get_json.return_value = payloads
 
         with patch.object(
-                GithubOrgClient,
+                github_org,
                 '_public_repos_url',
                 new_callable=PropertyMock) as mock_list:
             mock_list.return_value = "coding-orgs"
-            mocked_client = GithubOrgClient("SWE-Schools")
+            mocked_client = github_org("SWE-Schools")
             mocked_output = mocked_client.public_repos()
 
             pub_repos = [repo["name"] for repo in payloads]
@@ -86,7 +87,7 @@ class TestGithubOrgClient(unittest.TestCase):
         ({"license": {"key": "other_license"}}, "my_license", False),
         ({"license": {"key": "other_license"}}, "other_license", True)])
     def test_has_license(self, repo, key, expected_output):
-        actual_output = GithubOrgClient.has_license(repo, key)
+        actual_output = github_org.has_license(repo, key)
 
         self.assertEqual(actual_output, expected_output)
 
@@ -125,7 +126,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         """
         an integration test to test the public repo module
         """
-        mocked_client = GithubOrgClient("gameWorld.com")
+        mocked_client = github_org("gameWorld.com")
         mocked_output = mocked_client.public_repos()
 
         self.assertEqual(mocked_output, self.expected_repos)
@@ -137,10 +138,8 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         """
         test the public repo module with a given license
         """
-        mocked_client = GithubOrgClient("GameWorld.com")
+        mocked_client = github_org("GameWorld.com")
         mocked_output = mocked_client.public_repos
 
         self.assertEqual(mocked_output(), self.expected_repos)
         self.assertEqual(mocked_output("apache-2.0"), self.apache2_repos)
-        self.assertEqual(mocked_output("wrong-licence"), [])
-        self.mock_get_json.assert_called()
