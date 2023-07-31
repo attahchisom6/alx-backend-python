@@ -122,7 +122,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         """
         cls.get_patcher.stop()
 
-    def test_public_repo_integration(self):
+    def test_public_repos(self):
         """
         an integration test to test the public repo module
         """
