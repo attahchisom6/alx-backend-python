@@ -133,3 +133,13 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         self.assertEqual(mocked_client.repos_payload, self.repos_payload)
         self.assertEqual(mocked_client.org, self.org_payload)
         self.assertEqual(mocked_client.public_repos("wrong_license"), [])
+
+    def test_public_repos_with_license(self):
+        """
+        test the public repo module with a given license
+        """
+        mocked_client = github_org("GameWorld.com")
+        mocked_output = mocked_client.public_repos
+
+        self.assertEqual(mocked_output(), self.expected_repos)
+        self.assertEqual(mocked_output("apache-2.0"), self.apache2_repos)
