@@ -50,3 +50,33 @@ class TestGithubOrgClient(unittest.TestCase):
             github_client = github_org("abc")
             actual_output = github_client._public_repos_url
             self.assertEqual(actual_output, mocked_output.get("repos_url"))
+
+    @patch("client.get_json")
+    def test_public_repos(self, mock_get_json):
+        """
+        test if the public_repo method returns the desired list of
+        public repositories
+        """
+        payloads = [
+                {"name": "alx-repos"},
+                {"name": "holberton-repos"},
+                {"name": "bootcamp-repos"},
+                {"name": "aws-repos"},
+                {"name": "Azure"}
+            ]
+
+        mock_get_json.return_value = payloads
+
+        with patch.object(
+                github_org,
+                '_public_repos_url',
+                new_callable=PropertyMock) as mock_list:
+            mock_list.return_value = "coding-orgs"
+            mocked_client = github_org("SWE-Schools")
+            mocked_output = mocked_client.public_repos()
+
+            pub_repos = [repo["name"] for repo in payloads]
+            self.assertEqual(pub_repos, mocked_output)
+
+            mock_list.assert_called_once()
+            mock_get_json.assert_called_once()
